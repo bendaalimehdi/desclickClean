@@ -5,11 +5,11 @@ public class OpportunityEmailHandler {
         List<Opportunity> opportunitiesToUpdate = new List<Opportunity>();
 
         // Query for opportunities and their related contacts
-        Map<Id, Opportunity> oppMap = new Map<Id, Opportunity>([SELECT Id, Name, ContactId, Contact__r.Email FROM Opportunity WHERE Id IN :opportunityIds]);
+        Map<Id, Opportunity> oppMap = new Map<Id, Opportunity>([SELECT Id, Name, ContactId, CEmail__c FROM Opportunity WHERE Id IN :opportunityIds]);
 
         for (Opportunity opp : oppMap.values()) {
             // Ensure there's a contact associated with the opportunity
-            if (opp.Contact__r.Email != null) {
+            if (opp.CEmail__c != null) {
                 System.debug('Sending email for Opportunity: ' + opp.Name);
                 PageReference pdfPage = Page.pdf; // Replace 'pdf' with the name of your Visualforce page
                 pdfPage.getParameters().put('id', opp.Id);
@@ -29,7 +29,7 @@ public class OpportunityEmailHandler {
 
                 Messaging.SingleEmailMessage email = new Messaging.SingleEmailMessage();
                 email.setSubject('Devis');
-                email.setToAddresses(new List<String>{opp.Contact__r.Email});
+                email.setToAddresses(new List<String>{opp.CEmail__c});
                 email.setPlainTextBody('Bonjour, voila votre devis');
 
                 Id orgWideAddressId = [SELECT Id, Address, DisplayName FROM OrgWideEmailAddress  LIMIT 1].Id;
