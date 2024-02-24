@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>parcour__c</fullName>
+    <externalId>false</externalId>
+    <label>parcour</label>
+    <required>false</required>
+    <trackFeedHistory>false</trackFeedHistory>
+    <trackTrending>false</trackTrending>
+    <type>Picklist</type>
+    <valueSet>
+        <restricted>true</restricted>
+        <valueSetDefinition>
+            <sorted>false</sorted>
+            <value>
+                <fullName>Prospection</fullName>
+                <default>false</default>
+                <label>Prospection</label>
+            </value>
+            <value>
+                <fullName>Conception</fullName>
+                <default>false</default>
+                <label>Conception</label>
+            </value>
+            <value>
+                <fullName>Synthèse</fullName>
+                <default>false</default>
+                <label>Synthèse</label>
+            </value>
+            <value>
+                <fullName>Planification</fullName>
+                <default>false</default>
+                <label>Planification</label>
+            </value>
+            <value>
+                <fullName>Convocation</fullName>
+                <default>false</default>
+                <label>Convocation</label>
+            </value>
+            <value>
+                <fullName>Closed Won</fullName>
+                <default>false</default>
+                <label>Closed Won</label>
+            </value>
+            <value>
+                <fullName>Closed Lost</fullName>
+                <default>false</default>
+                <label>Closed Lost</label>
+            </value>
+        </valueSetDefinition>
+    </valueSet>
+</CustomField>
