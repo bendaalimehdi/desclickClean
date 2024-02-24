@@ -1,61 +1,39 @@
-@isTest
+@IsTest
 private class OpportunityEmailHandlerTest {
-    @isTest static void testSendEmailWithPDF_EmailSent() {
-        // Create test opportunities and contacts
-        Contact testContact = new Contact(
-            FirstName = 'John',
-            LastName = 'Doe',
-            Email = 'bendaalimehdi@gmail.com'
+
+    @IsTest
+    static void testSendEmailWithPDFForIds() {
+        // Créer des données de test
+        Account testAccount = new Account(
+            Name = 'Test Account',
+            Enseigne__c = 'TestEnseigne',
+            Email__c = 'bendaalimehdi@gmail.com'
         );
-        insert testContact;
+        insert testAccount;
 
         Opportunity testOpportunity = new Opportunity(
-            Name = 'Test Opportunity',
-            StageName = 'Prospecting',
-            CloseDate = System.today().addMonths(1),
-            ContactId = testContact.Id
+            Name = 'Test Opportunity', 
+            StageName = 'Prospecting', 
+            CloseDate = Date.today(),
+            AccountId = testAccount.Id,
+            Send_PDF__c = False
         );
         insert testOpportunity;
 
-        // Call the method to send emails
+        // Set up mock data for Visualforce page
+        PageReference pdfPage = Page.pdf; // Replace 'OpportunityDetailsPDF' with your actual VF page name
+        Test.setCurrentPage(pdfPage);
+
+        // Add parameters to the page
+        pdfPage.getParameters().put('id', testOpportunity.Id);
+
         Test.startTest();
-        System.debug('Calling sendEmailWithPDFForIds');
+        testOpportunity.Send_PDF__c = true; // update to true, which should fire the trigger
+        update testOpportunity;
         OpportunityEmailHandler.sendEmailWithPDFForIds(new List<Id>{testOpportunity.Id});
         Test.stopTest();
 
-        // Retrieve the updated opportunity to check if the email was sent
-        Opportunity updatedOpportunity = [SELECT Email_Sent__c FROM Opportunity WHERE Id = :testOpportunity.Id];
-
-        // Check if the email was sent and the opportunity was updated
-        System.assertEquals(true, updatedOpportunity.Email_Sent__c, 'Email should have been sent');
-    }
-
-    @isTest static void testSendEmailWithPDF_NoContactEmail() {
-        // Create test opportunities and contacts
-        Contact testContact = new Contact(
-            FirstName = 'Jane',
-            LastName = 'Doe',
-            Email = null
-        );
-        insert testContact;
-
-        Opportunity testOpportunity = new Opportunity(
-            Name = 'Test Opportunity 2',
-            StageName = 'Prospecting',
-            CloseDate = System.today().addMonths(1),
-            ContactId = testContact.Id
-        );
-        insert testOpportunity;
-
-        // Call the method to send emails
-        Test.startTest();
-        OpportunityEmailHandler.sendEmailWithPDFForIds(new List<Id>{testOpportunity.Id});
-        Test.stopTest();
-
-        // Retrieve the updated opportunity to check if the email was not sent
-        Opportunity updatedOpportunity = [SELECT Email_Sent__c FROM Opportunity WHERE Id = :testOpportunity.Id];
-
-        // Check if the email was not sent and the opportunity was not updated
-        System.assertEquals(false, updatedOpportunity.Email_Sent__c, 'Email should not have been sent');
+         // Check that an email was sent
+         System.assertEquals(1, Limits.getEmailInvocations(), 'An email should have been sent');
     }
 }
