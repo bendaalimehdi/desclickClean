@@ -1,6 +1,7 @@
 public class OpportunityEmailHandler {
  
-    public static void sendEmailWithPDFForIds(List<Id> opportunityIds) {
+    public static boolean sendEmailWithPDFForIds(List<Id> opportunityIds) {
+      
         List<Messaging.SingleEmailMessage> emailList = new List<Messaging.SingleEmailMessage>();
         List<Opportunity> opportunitiesToUpdate = new List<Opportunity>();
 
@@ -68,5 +69,6 @@ public class OpportunityEmailHandler {
                 
             }
         }
+        return results[0].isSuccess();
     }  
 }
